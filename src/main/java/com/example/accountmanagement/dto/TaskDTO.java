@@ -1,11 +1,12 @@
-package com.example.accountmanagement.user;
+package com.example.accountmanagement.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -17,5 +18,6 @@ public class TaskDTO {
 
     private String description;
 
-    private LocalDateTime deadline;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate deadline;
 }

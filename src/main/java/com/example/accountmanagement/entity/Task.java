@@ -1,14 +1,15 @@
-package com.example.accountmanagement;
+package com.example.accountmanagement.entity;
 
-import com.example.accountmanagement.user.TaskStatus;
-import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.security.core.userdetails.User;
+import com.example.accountmanagement.enums.TaskStatus;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "tasks")
 public class Task {
 
@@ -26,7 +27,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private com.example.accountmanagement.user.User assignedTo;
+    private User assignedTo;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status;

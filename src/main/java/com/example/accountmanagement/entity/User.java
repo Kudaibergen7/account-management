@@ -1,20 +1,19 @@
-package com.example.accountmanagement.user;
+package com.example.accountmanagement.entity;
 
-import com.example.accountmanagement.Task;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.persistence.Entity;
+import javax.persistence.*;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
+@Builder
 @Table(name = "users")
 public class User {
     @Id

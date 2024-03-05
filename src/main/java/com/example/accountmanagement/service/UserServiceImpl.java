@@ -1,39 +1,42 @@
-package com.example.accountmanagement.user;
+package com.example.accountmanagement.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.accountmanagement.entity.User;
+import com.example.accountmanagement.dto.UserDTO;
+import com.example.accountmanagement.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired
+
     public UserServiceImpl(UserRepository userRepository) {
+
         this.userRepository = userRepository;
     }
 
     public UserDTO saveUser(UserDTO userDTO) {
-        userRepository.saveUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getUsername(), userDTO.getPassword());
+        User user = new User();
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        userRepository.save(user);
         return userDTO;
     }
 
+
     public List<UserDTO> getAllUsers() {
-        List<UserDTO> userDTOs = new ArrayList<>();
-        List<User> users = userRepository.findAllUsers();
-        for (User user : users) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setFirstName(user.getFirstName());
-            userDTO.setLastName(user.getLastName());
-            userDTO.setUsername(user.getUsername());
-            userDTO.setPassword(user.getPassword());
-            userDTOs.add(userDTO);
-        }
-        return userDTOs;
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> new UserDTO(user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword()))
+                .collect(Collectors.toList());
     }
+
 
     public boolean login(String username, String password) {
         User user = userRepository.findByUsername(username);

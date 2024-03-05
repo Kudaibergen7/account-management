@@ -1,4 +1,6 @@
-package com.example.accountmanagement.user;
+package com.example.accountmanagement.service;
+
+import com.example.accountmanagement.dto.UserDTO;
 
 import java.util.List;
 

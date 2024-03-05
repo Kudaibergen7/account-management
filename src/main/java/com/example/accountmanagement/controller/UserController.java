@@ -1,6 +1,7 @@
-package com.example.accountmanagement.user;
+package com.example.accountmanagement.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.accountmanagement.dto.UserDTO;
+import com.example.accountmanagement.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +12,11 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserServiceImpl userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {

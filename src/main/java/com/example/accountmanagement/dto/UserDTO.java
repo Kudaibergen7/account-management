@@ -1,11 +1,13 @@
-package com.example.accountmanagement.user;
+package com.example.accountmanagement.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
 

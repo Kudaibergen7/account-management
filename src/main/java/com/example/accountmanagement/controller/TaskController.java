@@ -1,52 +1,65 @@
-package com.example.accountmanagement.user;
+package com.example.accountmanagement.controller;
 
-import com.example.accountmanagement.Task;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.accountmanagement.entity.Task;
+import com.example.accountmanagement.dto.TaskDTO;
+import com.example.accountmanagement.mapper.TaskMapper;
+import com.example.accountmanagement.service.TaskService;
+import com.example.accountmanagement.enums.TaskStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
 
     private final TaskService taskService;
+    private final TaskMapper mapper;
 
-    @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, TaskMapper mapper) {
         this.taskService = taskService;
+        this.mapper = mapper;
     }
 
-    @PostMapping
-    public ResponseEntity<Task> createTaskForUser(@RequestBody TaskDTO taskDTO, @RequestParam String assignedToUsername) {
+    @PostMapping("/create")
+    public ResponseEntity<TaskDTO> createTaskForUser(@RequestBody TaskDTO taskDTO,
+                                                     @RequestParam String assignedToUsername) {
         Task createdTask = taskService.createTaskForUser(taskDTO, assignedToUsername);
-        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+        TaskDTO createdTaskDTO = mapper.convertToDto(createdTask);
+        return new ResponseEntity<>(createdTaskDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Task>> getAllTasksForUser(@RequestParam String assignedToUsername) {
+
+
+
+    @GetMapping("/allTasksForUser")
+    public ResponseEntity<List<TaskDTO>> getAllTasksForUser(@RequestParam String assignedToUsername) {
         List<Task> tasks = taskService.getAllTasksForUser(assignedToUsername);
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+        List<TaskDTO> taskDTOs = tasks.stream().map(mapper::convertToDto).collect(Collectors.toList());
+        return new ResponseEntity<>(taskDTOs, HttpStatus.OK);
     }
 
     @GetMapping("/{taskId}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long taskId) {
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long taskId) {
         Task task = taskService.getTaskById(taskId);
         if (task != null) {
-            return new ResponseEntity<>(task, HttpStatus.OK);
+            return new ResponseEntity<>(mapper.convertToDto(task), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/{taskId}")
-    public ResponseEntity<Void> updateTask(@PathVariable Long taskId, @RequestBody Task task) {
+    public ResponseEntity<Void> updateTask(@PathVariable Long taskId,
+                                           @RequestBody TaskDTO taskDTO) {
         Task existingTask = taskService.getTaskById(taskId);
         if (existingTask != null) {
-            task.setId(taskId);
-            taskService.updateTask(task);
+            Task updatedTask = mapper.convertToEntity(taskDTO);
+            updatedTask.setId(taskId);
+            taskService.updateTask(updatedTask);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -60,7 +73,8 @@ public class TaskController {
     }
 
     @PatchMapping("/{taskId}")
-    public ResponseEntity<Void> changeTaskStatus(@PathVariable Long taskId, @RequestParam TaskStatus status) {
+    public ResponseEntity<Void> changeTaskStatus(@PathVariable Long taskId,
+                                                 @RequestParam TaskStatus status) {
         Task task = taskService.getTaskById(taskId);
         if (task != null) {
             taskService.changeTaskStatus(taskId, status);
@@ -70,4 +84,5 @@ public class TaskController {
         }
     }
 }
+
 

@@ -1,4 +1,4 @@
-package com.example.accountmanagement.user;
+package com.example.accountmanagement.enums;
 
 public enum TaskStatus {
     TODO,
