@@ -2,26 +2,19 @@ package com.example.accountmanagement.dto;
 
 import com.example.accountmanagement.enums.Role;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
-
-    private String firstName;
-
-    private String lastName;
-
+public class RegisterRequest {
+    private String firstname;
+    private String lastname;
     private String username;
-
     private String password;
-
     private Role role;
 
-    public UserDTO(String firstName, String lastName, String username, String password) {
-    }
 }

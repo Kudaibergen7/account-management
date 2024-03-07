@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 20042018
+      POSTGRES_DB: account
+    ports:
+      - "5434:5432"
+    networks:
+      - app-network
+
+  account-management:
+    build:
+      context: .
+    container_name: account-management-container
+    ports:
+      - "8888:8090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-container:5434/account
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 20042018
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+networks:
+  app-network:
